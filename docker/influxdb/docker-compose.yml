@@ -1,0 +1,13 @@
+---
+services:
+  influxdb:
+    image: influxdb:latest
+    container_name: influxdb
+    ports:
+      - 8086:8086
+    volumes:
+      - influxdb_data:/var/lib/influxdb2
+    restart: unless-stopped
+volumes:
+  influxdb_data:
+    name: influxdb_data

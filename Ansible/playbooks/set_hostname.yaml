@@ -1,0 +1,9 @@
+---
+- hosts: "*"
+  vars:
+    NAME: <HOSTNAME>
+  tasks:
+    - name: "Set Hostname {{ NAME }}"
+      ansible.builtin.hostname:
+        name: "{{ NAME }}"
+      become: true

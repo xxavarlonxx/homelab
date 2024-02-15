@@ -1,0 +1,22 @@
+---
+- hosts: "*"
+  become: yes
+  vars:
+    NAME: andre
+    FULLNAME: Andre Hochschulte
+    UID: 1000
+    PASSWORD: 9eDWxvRwHcUN2P
+  tasks:
+    - name: "create new user"
+      ansible.builtin.user:
+        name: "{{ NAME }}"
+        uid: "{{ UID }}"
+        password: "{{ PASSWORD | password_hash('sha512') }}"
+        shell: /bin/bash
+        groups: sudo
+        append: yes
+    - name: Set authorized key taken from file
+      ansible.posix.authorized_key:
+        user: "{{ NAME }}"
+        state: present
+        key: "{{ lookup('file', '~/.ssh/id_ecdsa.pub') }}"

@@ -1,0 +1,9 @@
+- name: Install qemu-guest-agent
+  hosts: "*"
+  tasks:
+    - name: Install borgbackup
+      apt:
+        name: borgbackup
+        state: present
+        update_cache: true
+      become: true

@@ -1,0 +1,11 @@
+---
+services:
+  gitlab-runner:
+    image: gitlab/gitlab-runner:latest
+    container_name: gitlab-runner
+    volumes:
+      - gitlabrunner_data:/etc/gitlab-runner
+    restart: unless-stopped
+volumes:
+  gitlabrunner_data:
+    name: gitlabrunner_data

@@ -1,0 +1,23 @@
+---
+services:
+  duplicati:
+    image: lscr.io/linuxserver/duplicati:latest
+    container_name: duplicati
+    environment:
+      - PUID=0
+      - PGID=0
+      - TZ=Europe/Berlin
+      #- CLI_ARGS= #optional
+    networks:
+      - web
+    volumes:
+      - duplicati_config:/config
+      - /mnt:/source
+    ports:
+      - 1007:8200
+    restart: unless-stopped
+volumes:
+  duplicati_config:
+networks:
+  web:
+    external: true

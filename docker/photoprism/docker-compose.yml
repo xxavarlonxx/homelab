@@ -1,0 +1,33 @@
+---
+services:
+  photoprism-db:
+    image: lscr.io/linuxserver/mariadb:latest
+    container_name: photoprism-db
+    environment:
+      - "PUID=1000"
+      - "PGID=1000"
+      - "TZ=Europe/Berlin"
+      - "MYSQL_ROOT_PASSWORD=your-root-password"
+    volumes:
+      - photoprism_db:/config
+    restart: unless-stopped
+  photoprism:
+    image: photoprism/photoprism:latest
+    container_name: photoprism
+    ports:
+      - 2342:2342
+    environment:
+      - "PHOTOPRISM_DATABASE_DRIVER=mysql"
+      - "PHOTOPRISM_DATABASE_SERVER=mariadb:3306"
+      - "PHOTOPRISM_DATABASE_PASSWORD=your-db-user-password"
+    volumes:
+      - /mnt/photos:/photoprism/originals
+      - photoprism_data:/photoprism/storage
+    restart: unless-stopped
+    depends_on:
+      - mariadb
+volumes:
+  photoprism_db:
+    name: photoprism_db
+  photoprism_data:
+    name: photoprism_data

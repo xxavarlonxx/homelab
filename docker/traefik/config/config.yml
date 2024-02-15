@@ -1,0 +1,11 @@
+http:
+  serversTransports:
+    homelab:
+      insecureSkipVerify: true
+      #rootCAs:
+      #  - /etc/traefik/certs/homelab-ca.crt
+  routers:
+  services:
+tcp:
+  routers:
+  services:

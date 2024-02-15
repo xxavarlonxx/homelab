@@ -1,0 +1,18 @@
+---
+services:
+  motioneye:
+    image: ccrisan/motioneye:master-amd64
+    container_name: motioneye
+    ports:
+      - 8081:8081
+      - 80:8765
+    environment:
+      - TZ=Europe/Berlin
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - motioneye_config:/etc/motioneye
+      - /opt/motioneye/data:/var/lib/motioneye
+    restart: unless-stopped
+volumes:
+  motioneye_config:
+    name: motioneye_config

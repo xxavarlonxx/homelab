@@ -1,0 +1,22 @@
+---
+services:
+  omada:
+    image: mbentley/omada-controller:latest
+    container_name: omada
+    ports:
+      - 8043:8043
+    #labels:
+    #- traefik.http.middlewares.add-headers.headers.customrequestheaders.host=<DNS-NAME>:8043"
+    environment:
+      - "PUID=1000"
+      - "PGId=1000"
+      - "TZ=Europe/Berlin"
+    volumes:
+      - omada_data:/opt/tplink/EAPController/data
+      - omada_logs:/opt/tplink/EAPController/logs
+    restart: unless-stopped
+volumes:
+  omada_data:
+    name: omada_data
+  omada_logs:
+    name: omada_logs

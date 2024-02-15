@@ -1,0 +1,14 @@
+services:
+  twingate_connector:
+    container_name: twingate-spotted-aardwolf
+    restart: unless-stopped
+    image: "twingate/connector:latest"
+    environment:
+      - SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt
+      - TWINGATE_API_ENDPOINT=/connector.stock
+      - TWINGATE_NETWORK=<YOUR NETWORK>
+      - TWINGATE_ACCESS_TOKEN=<ACCESS TOKEN>
+      - TWINGATE_REFRESH_TOKEN=<REFRESH TOKEN>
+      - TWINGATE_LOG_LEVEL=3
+    sysctls:
+      net.ipv4.ping_group_range: "0 2147483647"

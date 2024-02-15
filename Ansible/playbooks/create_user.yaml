@@ -1,0 +1,15 @@
+---
+- hosts: "*"
+  become: yes
+  vars:
+    NAME: <USER NAME>
+    FULLNAME: <FULLNAME>
+    UID: <UUID>
+    PASSWORD: <PASSWORD>
+  tasks:
+    - name: "create new user"
+      ansible.builtin.user:
+        name: "{{ NAME }}"
+        uid: "{{ UID }}"
+        password: "{{ PASSWORD | password_hash('sha512') }}"
+        shell: /bin/bash

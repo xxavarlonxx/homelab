@@ -1,0 +1,20 @@
+version: "3"
+
+services:
+  minio:
+    image: docker.io/bitnami/minio:2023
+    container_name: minio
+    ports:
+      - 9001:9001
+    networks:
+      - web
+    volumes:
+      - /mnt/minio:/bitnami/minio/data # Storage Data
+      - minio_certs:/certs
+    env_file:
+      - stack.env
+    restart: unless-stopped
+volumes:
+  minio_certs:
+    name: minio_certs
+    driver: local
