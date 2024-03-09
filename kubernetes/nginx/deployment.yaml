@@ -1,0 +1,73 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: nginx-1
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-1 # Name of the deployment
+  namespace: nginx-1 # Name of the namespace
+  labels:
+    app: nginx-1 # Name of your application
+spec:
+  selector:
+    matchLabels:
+      app: nginx-1 # Name of your application
+  replicas: 1 # Number of replicas
+  template:
+    metadata:
+      labels:
+        app: nginx-1 # Name of your application
+    spec:
+      containers:
+        # Containers are the individual pieces of your application that you want
+        # to run.
+        - name: nginx-1 # Name of the container
+          image: nginx:latest # The image you want to run
+          # resources:
+          #   limits:
+          #     memory: 512Mi
+          #     cpu: "1"
+          #   requests:
+          #     memory: 256Mi
+          #     cpu: "0.2"
+          ports:
+            - name: https
+              containerPort: 80 # The port that your application uses
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-1
+  namespace: nginx-1
+spec:
+  selector:
+    app: nginx-1
+  type: ClusterIP
+  # ClusterIP means this service can be accessed by any pod in the cluster
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80
+      protocol: TCP # optional protocol
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress # Name of the ingress object
+  namespace: nginx-1 # Name of the namespace
+spec:
+  rules:
+    - host: "nginx-1.kube.home" # Your hostname
+      http:
+        paths:
+          # Path-based routing settings:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: nginx-1 # The name of the service
+                port:
+                  number: 80 # Service Portnumber
+
