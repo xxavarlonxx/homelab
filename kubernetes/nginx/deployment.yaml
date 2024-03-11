@@ -3,6 +3,21 @@ kind: Namespace
 metadata:
   name: nginx-1
 ---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: nginx-many-pvc
+  namespace: nginx-1
+  labels:
+    app: nginx-1
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: longhorn
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -35,6 +50,15 @@ spec:
           ports:
             - name: https
               containerPort: 80 # The port that your application uses
+          volumeMounts:
+            # VolumeMounts are the volumes that your application uses.
+            - mountPath: /var/www/html # The path that your application uses
+              name: nginx-data # Name of the volume
+      volumes:
+        # Volumes are the persistent storage that your application uses.
+        - name: nginx-data # Name of the volume
+          persistentVolumeClaim:
+            claimName: nginx-many-pvc # Name of the persistent volume claim
 ---
 apiVersion: v1
 kind: Service
