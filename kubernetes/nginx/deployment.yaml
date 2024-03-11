@@ -68,7 +68,8 @@ metadata:
 spec:
   selector:
     app: nginx-1
-  type: ClusterIP
+  #type: ClusterIP
+  type: LoadBalancer
   # ClusterIP means this service can be accessed by any pod in the cluster
   ports:
     - name: http

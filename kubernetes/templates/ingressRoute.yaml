@@ -1,0 +1,21 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: name
+  namespace: default
+  annotations:
+    kubernetes.io/ingress.class: traefik
+spec:
+  entryPoints:
+    - websecure # web or websecure
+  routes:
+    - match: Host(`example.org`)
+      kind: Rule
+      #middlewares:
+      #  - name: traefik-dashboard-basicauth
+      #    namespace: traefik
+      services:
+        - name: api@internal
+          kind: TraefikService
+#  tls:
+#    secretName: secret-tls
