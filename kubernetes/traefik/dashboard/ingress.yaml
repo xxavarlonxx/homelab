@@ -9,7 +9,7 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`traefik.kube.home`)
+    - match: Host(`traefik.kube-home-01.hochschulte.me`)
       kind: Rule
       middlewares:
         - name: traefik-dashboard-basicauth
@@ -17,5 +17,5 @@ spec:
       services:
         - name: api@internal
           kind: TraefikService
-#  tls:
-#    secretName: cluster-internal-hochschulte-me-tls
+  tls:
+    secretName: production-hochschulte-me-tls

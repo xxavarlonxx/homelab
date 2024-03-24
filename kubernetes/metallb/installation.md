@@ -1,3 +1,12 @@
+# Installation MetalLb
+
+## Kubectl
+
+```bash
+kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.14.3/config/manifests/metallb-native.yaml
+```
+
+```yaml
 ---
 apiVersion: metallb.io/v1beta1
 kind: IPAddressPool
@@ -6,10 +15,11 @@ metadata:
   namespace: metallb-system
 spec:
   addresses:
-    - 10.10.10.50-10.10.10.69
+    - xx.xx.xx.xx-xx.xx.xx.xx
 ---
 apiVersion: metallb.io/v1beta1
 kind: L2Advertisement
 metadata:
   name: metallb-advertisement
   namespace: metallb-system
+```

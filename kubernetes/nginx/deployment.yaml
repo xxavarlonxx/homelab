@@ -1,18 +1,18 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: nginx-1
+  name: nginx
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: nginx-many-pvc
-  namespace: nginx-1
+  name: nginx-pvc
+  namespace: nginx
   labels:
-    app: nginx-1
+    app: nginx
 spec:
   accessModes:
-    - ReadWriteMany
+    - ReadWriteOnce
   resources:
     requests:
       storage: 1Gi
@@ -21,24 +21,24 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nginx-1 # Name of the deployment
-  namespace: nginx-1 # Name of the namespace
+  name: nginx # Name of the deployment
+  namespace: nginx # Name of the namespace
   labels:
-    app: nginx-1 # Name of your application
+    app: nginx # Name of your application
 spec:
   selector:
     matchLabels:
-      app: nginx-1 # Name of your application
+      app: nginx # Name of your application
   replicas: 1 # Number of replicas
   template:
     metadata:
       labels:
-        app: nginx-1 # Name of your application
+        app: nginx # Name of your application
     spec:
       containers:
         # Containers are the individual pieces of your application that you want
         # to run.
-        - name: nginx-1 # Name of the container
+        - name: nginx # Name of the container
           image: nginx:latest # The image you want to run
           # resources:
           #   limits:
@@ -48,7 +48,7 @@ spec:
           #     memory: 256Mi
           #     cpu: "0.2"
           ports:
-            - name: https
+            - name: http
               containerPort: 80 # The port that your application uses
           volumeMounts:
             # VolumeMounts are the volumes that your application uses.
@@ -58,41 +58,22 @@ spec:
         # Volumes are the persistent storage that your application uses.
         - name: nginx-data # Name of the volume
           persistentVolumeClaim:
-            claimName: nginx-many-pvc # Name of the persistent volume claim
+            claimName: nginx-pvc # Name of the persistent volume claim
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: nginx-1
-  namespace: nginx-1
+  name: nginx
+  namespace: nginx
 spec:
   selector:
-    app: nginx-1
+    app: nginx
   #type: ClusterIP
-  type: LoadBalancer
+  type: ClusterIP
   # ClusterIP means this service can be accessed by any pod in the cluster
   ports:
     - name: http
       port: 80
       targetPort: 80
       protocol: TCP # optional protocol
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: ingress # Name of the ingress object
-  namespace: nginx-1 # Name of the namespace
-spec:
-  rules:
-    - host: "nginx-1.kube.home" # Your hostname
-      http:
-        paths:
-          # Path-based routing settings:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: nginx-1 # The name of the service
-                port:
-                  number: 80 # Service Portnumber
 

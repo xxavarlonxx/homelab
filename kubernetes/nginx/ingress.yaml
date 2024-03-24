@@ -1,22 +1,23 @@
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
 metadata:
-  name: longhorn-frontend
-  namespace: longhorn-system
+  name: nginx
+  namespace: nginx
   annotations:
     kubernetes.io/ingress.class: traefik
 spec:
   entryPoints:
-    - websecure # web or websecure
+    - websecure
   routes:
-    - match: Host(`longhorn.kube-home-01.hochschulte.me`)
+    - match: Host(`nginx.kube-home-01.hochschulte.me`)
       kind: Rule
-      #middlewares:
-      #  - name: traefik-dashboard-basicauth
-      #    namespace: traefik
+      #      middlewares:
+      #        - name: default-headers
+      #          namespace: default
       services:
-        - name: longhorn-frontend
+        - name: nginx
           kind: Service
           port: 80
   tls:
     secretName: production-hochschulte-me-tls
+#    secretName: staging-hochschulte-me-tls
