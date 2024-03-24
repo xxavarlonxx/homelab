@@ -1,0 +1,14 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: staging-hochschulte-me
+  namespace: default
+spec:
+  secretName: staging-hochschulte-me-tls
+  issuerRef:
+    name: letsencrypt-staging
+    kind: ClusterIssuer
+  commonName: "*.kube-home-01.hochschulte.me"
+  dnsNames:
+    - "kube-home-01.hochschulte.me"
+    - "*.kube-home-01.hochschulte.me"

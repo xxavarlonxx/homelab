@@ -1,0 +1,94 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: heimdall
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: heimdall # Name of the deployment
+  namespace: heimdall # Name of the namespace
+  labels:
+    app: heimdall # Name of your application
+spec:
+  selector:
+    matchLabels:
+      app: heimdall # Name of your application
+  replicas: 1 # Number of replicas
+  template:
+    metadata:
+      labels:
+        app: heimdall # Name of your application
+    spec:
+      containers:
+        # Containers are the individual pieces of your application that you want
+        # to run.
+        - name: heimdall # Name of the container
+          image: lscr.io/linuxserver/heimdall:2.6.1 # The image you want to run
+          env:
+            - name: PUID
+              value: "1000"
+            - name: PGID
+              value: "1000"
+            - name: TZ
+              value: "Europe/Berlin"
+          resources:
+            limits:
+              memory: 256Mi
+              cpu: "0.5"
+            requests:
+              memory: 128Mi
+              cpu: "0.2"
+          ports:
+            - name: http
+              containerPort: 80 # The port that your application uses
+          volumeMounts:
+            # VolumeMounts are the volumes that your application uses.
+            - mountPath: /config # The path that your application uses
+              name: heimdall-data # Name of the volume
+      volumes:
+        # Volumes are the persistent storage that your application uses.
+        - name: heimdall-data # Name of the volume
+          persistentVolumeClaim:
+            claimName: heimdall-data # Name of the persistent volume claim
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: heimdall
+  namespace: heimdall
+spec:
+  selector:
+    app: heimdall
+  #type: ClusterIP
+  type: ClusterIP
+  # ClusterIP means this service can be accessed by any pod in the cluster
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80
+      protocol: TCP # optional protocol
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: heimdall
+  namespace: heimdall
+  annotations:
+    kubernetes.io/ingress.class: traefik
+spec:
+  entryPoints:
+    - websecure # web or websecure
+  routes:
+    - match: Host(`heimdall.kube-home-01.hochschulte.me`)
+      kind: Rule
+      #middlewares:
+      #  - name: traefik-dashboard-basicauth
+      #    namespace: traefik
+      services:
+        - name: heimdall
+          kind: Service
+          port: 80
+  tls:
+    secretName: production-hochschulte-me-tls
