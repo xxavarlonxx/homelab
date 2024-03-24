@@ -3,7 +3,7 @@
 ## First k3s master node
 
 ```bash
-curl -sfL https://get.k3s.io | K3S_TOKEN=WbdCc43q2gXA88 sh -s - server \
+curl -sfL https://get.k3s.io | K3S_TOKEN=<token> sh -s - server \
    --write-kubeconfig-mode 644 \
    --disable=traefik \
    --disable=servicelb \
